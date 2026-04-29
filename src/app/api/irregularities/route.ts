@@ -10,6 +10,7 @@ export async function POST(request: Request): Promise<Response> {
     const payload = (await request.json()) as IrregularityReportCreatePayload;
     await createIrregularityReport({
       message: payload.message ?? "",
+      dni: payload.dni,
       fullName: payload.fullName,
       email: payload.email,
       phone: payload.phone,

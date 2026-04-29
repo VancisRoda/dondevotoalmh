@@ -103,6 +103,7 @@ export interface IrregularityFollowup {
 export interface IrregularityReport {
   id: number;
   message: string;
+  dni: string | null;
   fullName: string | null;
   email: string | null;
   phoneRaw: string | null;
@@ -115,6 +116,7 @@ export interface IrregularityReport {
 
 export interface IrregularityReportCreatePayload {
   message: string;
+  dni?: string;
   fullName?: string;
   email?: string;
   phone?: string;

@@ -1,7 +1,11 @@
 import { withDatabase } from "@/lib/db";
 import { getTimezone } from "@/lib/env";
 import { getTodayDateString, participationLabel } from "@/lib/format";
-import { normalizeOptionalText, normalizeWhatsappPhone } from "@/lib/phone";
+import {
+  normalizeOptionalDni,
+  normalizeOptionalText,
+  normalizeWhatsappPhone,
+} from "@/lib/phone";
 import type {
   AdminStatsResponse,
   IrregularityFollowup,
@@ -54,6 +58,7 @@ interface LookupEventRow {
 interface ReportRow {
   id: number;
   message: string;
+  dni: string | null;
   full_name: string | null;
   email: string | null;
   phone_raw: string | null;
@@ -145,6 +150,7 @@ export async function recordLookupEvent(result: LookupResponse): Promise<void> {
 
 export async function createIrregularityReport(input: {
   message: string;
+  dni?: string;
   fullName?: string;
   email?: string;
   phone?: string;
@@ -158,12 +164,14 @@ export async function createIrregularityReport(input: {
     await sql`
       INSERT INTO irregularity_reports (
         message,
+        dni,
         full_name,
         email,
         phone_raw,
         phone_whatsapp
       ) VALUES (
         ${message},
+        ${normalizeOptionalDni(input.dni)},
         ${normalizeOptionalText(input.fullName)},
         ${normalizeOptionalText(input.email)},
         ${normalizeOptionalText(input.phone)},
@@ -216,6 +224,7 @@ export async function getIrregularityReports(): Promise<IrregularityReport[]> {
       SELECT
         id,
         message,
+        dni,
         full_name,
         email,
         phone_raw,
@@ -255,6 +264,7 @@ export async function getIrregularityReports(): Promise<IrregularityReport[]> {
     return reportRows.map((row) => ({
       id: row.id,
       message: row.message,
+      dni: row.dni,
       fullName: row.full_name,
       email: row.email,
       phoneRaw: row.phone_raw,
@@ -264,6 +274,35 @@ export async function getIrregularityReports(): Promise<IrregularityReport[]> {
       updatedAt: row.updated_at,
       followups: followupsByReport.get(row.id) ?? [],
     }));
+  });
+}
+
+export async function backfillIrregularityWhatsappPhones(): Promise<void> {
+  await withDatabase(async (sql) => {
+    const reportRows = (await sql.query<false, false>(
+      `
+      SELECT id, phone_raw, phone_whatsapp
+      FROM irregularity_reports
+      ORDER BY id ASC
+      `,
+    )) as unknown as Array<{
+      id: number;
+      phone_raw: string | null;
+      phone_whatsapp: string | null;
+    }>;
+
+    for (const row of reportRows) {
+      const normalized = normalizeWhatsappPhone(row.phone_raw);
+      if (!normalized || normalized === row.phone_whatsapp) {
+        continue;
+      }
+
+      await sql`
+        UPDATE irregularity_reports
+        SET phone_whatsapp = ${normalized}, updated_at = NOW()
+        WHERE id = ${row.id}
+      `;
+    }
   });
 }
 

@@ -433,6 +433,7 @@ export function AdminDashboard({ initialDate }: AdminDashboardProps) {
                     <p className={styles.reportMessage}>{report.message}</p>
 
                     <div className={styles.contactRow}>
+                      {report.dni ? <span className={styles.chip}>DNI {report.dni}</span> : null}
                       {report.fullName ? <span className={styles.chip}>{report.fullName}</span> : null}
                       {report.email ? <span className={styles.chip}>{report.email}</span> : null}
                       {report.phoneRaw ? <span className={styles.chip}>{report.phoneRaw}</span> : null}

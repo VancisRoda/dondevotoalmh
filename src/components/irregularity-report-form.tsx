@@ -7,6 +7,7 @@ import styles from "./irregularity-report-form.module.css";
 export function IrregularityReportForm() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [dni, setDni] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -16,6 +17,7 @@ export function IrregularityReportForm() {
 
   const resetForm = () => {
     setMessage("");
+    setDni("");
     setFullName("");
     setEmail("");
     setPhone("");
@@ -35,6 +37,7 @@ export function IrregularityReportForm() {
           },
           body: JSON.stringify({
             message,
+            dni,
             fullName,
             email,
             phone,
@@ -83,6 +86,16 @@ export function IrregularityReportForm() {
             </div>
 
             <div className={styles.grid}>
+              <div className={styles.field}>
+                <label htmlFor="report-dni">DNI (opcional)</label>
+                <input
+                  id="report-dni"
+                  inputMode="numeric"
+                  onChange={(event) => setDni(event.target.value.replace(/\D/g, ""))}
+                  value={dni}
+                />
+              </div>
+
               <div className={styles.field}>
                 <label htmlFor="report-name">Nombre completo (opcional)</label>
                 <input

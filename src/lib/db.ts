@@ -57,6 +57,7 @@ export async function ensureDatabaseSchema(): Promise<void> {
       CREATE TABLE IF NOT EXISTS irregularity_reports (
         id BIGSERIAL PRIMARY KEY,
         message TEXT NOT NULL,
+        dni TEXT,
         full_name TEXT,
         email TEXT,
         phone_raw TEXT,
@@ -65,6 +66,11 @@ export async function ensureDatabaseSchema(): Promise<void> {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ADD COLUMN IF NOT EXISTS dni TEXT
     `;
 
     await sql`
