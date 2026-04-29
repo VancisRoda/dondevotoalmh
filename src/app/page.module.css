@@ -53,9 +53,13 @@
 }
 
 .heroContent {
+  width: min(1120px, calc(100vw - 2rem));
+  margin: 0 auto;
   display: grid;
   gap: 1rem;
   padding: 4.2rem 0 3rem;
+  justify-items: center;
+  text-align: center;
 }
 
 .desktopTitle,
@@ -71,7 +75,7 @@
   font-size: clamp(5rem, 10vw, 8rem);
   letter-spacing: 0.06em;
   text-shadow: 0 5px 0 rgba(0, 0, 0, 0.16);
-  white-space: nowrap;
+  text-wrap: balance;
 }
 
 .mobileTitle {
@@ -84,6 +88,7 @@
 .heroLead {
   color: var(--hero-text-soft);
   font-size: clamp(1.05rem, 2vw, 1.2rem);
+  margin: 0;
 }
 
 .lookupSection {

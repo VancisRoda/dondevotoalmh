@@ -125,11 +125,7 @@ export default function Home() {
       <footer className={styles.footer}>
         <p>
           Sistema creado por{" "}
-          <a
-            href="https://www.instagram.com/vancis.roda"
-            rel="noreferrer"
-            target="_blank"
-          >
+          <a href="https://www.instagram.com/vancis.roda" rel="noreferrer" target="_blank">
             Vancis Roda - Contacto
           </a>
         </p>
