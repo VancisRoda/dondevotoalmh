@@ -1,17 +1,74 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --page-bg: #f5f6f2;
+  --hero-bg: #006b09;
+  --hero-text: #f9faf4;
+  --hero-text-soft: rgba(249, 250, 244, 0.86);
+  --hero-grid: rgba(255, 255, 255, 0.07);
+  --hero-chip: rgba(255, 255, 255, 0.1);
+  --hero-border: rgba(255, 255, 255, 0.14);
+  --panel-bg: rgba(255, 255, 255, 0.76);
+  --panel-border: rgba(0, 77, 7, 0.12);
+  --panel-shadow: 0 26px 70px rgba(3, 28, 5, 0.08);
+  --card-bg: rgba(255, 255, 255, 0.94);
+  --card-border: rgba(0, 77, 7, 0.1);
+  --card-shadow: 0 20px 44px rgba(3, 28, 5, 0.06);
+  --input-bg: #ffffff;
+  --input-border: rgba(0, 77, 7, 0.14);
+  --button-bg: #008808;
+  --button-text: #f9faf4;
+  --social-bg: rgba(255, 255, 255, 0.78);
+  --social-border: rgba(0, 77, 7, 0.1);
+  --accent-surface: #0b5f08;
+  --accent-contrast: #ffffff;
+  --accent-muted: rgba(255, 255, 255, 0.8);
+  --accent-strong: #0b5f08;
+  --text-primary: #123d12;
+  --text-soft: rgba(18, 61, 18, 0.68);
+  --error-bg: rgba(147, 22, 22, 0.08);
+  --error-text: #7e1717;
+  --error-border: rgba(147, 22, 22, 0.12);
+  --font-sans:
+    "Roboto Condensed", "Roboto Condensed Fallback", ui-sans-serif, system-ui,
+    sans-serif;
+  --font-mono:
+    "Geist Mono", "Geist Mono Fallback", ui-monospace, "SFMono-Regular",
+    monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html[data-theme="dark"] {
+  --page-bg: #081408;
+  --hero-bg: #041e06;
+  --hero-text: #f7fbf3;
+  --hero-text-soft: rgba(247, 251, 243, 0.82);
+  --hero-grid: rgba(255, 255, 255, 0.05);
+  --hero-chip: rgba(255, 255, 255, 0.08);
+  --hero-border: rgba(255, 255, 255, 0.12);
+  --panel-bg: rgba(10, 28, 12, 0.82);
+  --panel-border: rgba(121, 170, 126, 0.12);
+  --panel-shadow: 0 30px 70px rgba(0, 0, 0, 0.28);
+  --card-bg: #0f2310;
+  --card-border: rgba(133, 191, 138, 0.08);
+  --card-shadow: 0 18px 38px rgba(0, 0, 0, 0.18);
+  --input-bg: #152d16;
+  --input-border: rgba(162, 214, 166, 0.12);
+  --button-bg: #f4f6ed;
+  --button-text: #0b5f08;
+  --social-bg: #102311;
+  --social-border: rgba(133, 191, 138, 0.08);
+  --accent-surface: #f4f6ed;
+  --accent-contrast: #0b5f08;
+  --accent-muted: rgba(11, 95, 8, 0.74);
+  --accent-strong: #8de29d;
+  --text-primary: #eff6ea;
+  --text-soft: rgba(239, 246, 234, 0.68);
+  --error-bg: rgba(255, 126, 126, 0.1);
+  --error-text: #ffb6b6;
+  --error-border: rgba(255, 126, 126, 0.14);
 }
 
 html {
-  height: 100%;
+  min-height: 100%;
+  scroll-behavior: smooth;
 }
 
 html,
@@ -22,19 +79,24 @@ body {
 
 body {
   min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--page-bg);
+  color: var(--text-primary);
+  font-family: var(--font-body), var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
+}
+
+*::selection {
+  background: rgba(0, 136, 8, 0.2);
 }
 
 a {
@@ -42,8 +104,9 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
