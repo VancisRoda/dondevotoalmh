@@ -19,13 +19,16 @@ const robotoCondensed = Roboto_Condensed({
   variable: "--font-body",
 });
 
+const shareDescription =
+  "Consultá tu mesa para las elecciones del 6 de mayo del Centro de Estudiantes y Consejo Directivo con tu DNI.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://dondevotoalmh.vercel.app"),
+  metadataBase: new URL("https://dondevotoalmh.com.ar"),
   title: "¿Dónde voto al MH?",
-  description: "Consultá tu mesa y tu orden de votación con tu DNI.",
+  description: shareDescription,
   openGraph: {
     title: "¿Dónde voto al MH?",
-    description: "Consultá tu mesa y tu orden de votación con tu DNI.",
+    description: shareDescription,
     siteName: "¿Dónde voto al MH?",
     type: "website",
     locale: "es_AR",
@@ -41,7 +44,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "¿Dónde voto al MH?",
-    description: "Consultá tu mesa y tu orden de votación con tu DNI.",
+    description: shareDescription,
     images: ["/favicon.png"],
   },
   icons: {

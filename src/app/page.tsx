@@ -97,7 +97,7 @@ export default function Home() {
 
         <div className={styles.heroContent}>
           <span className={styles.desktopTitle}>¿Dónde voto al MH?</span>
-          <span className={styles.mobileTitle}>¿Dónde voto?</span>
+          <span className={styles.mobileTitle}>¿Dónde voto al MH?</span>
           <p className={styles.heroLead}>Ingresá tu DNI y conocé en qué mesa votás.</p>
         </div>
       </section>

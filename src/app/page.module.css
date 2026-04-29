@@ -82,8 +82,10 @@
 .mobileTitle {
   display: none;
   color: var(--hero-text);
-  font-size: clamp(3.5rem, 18vw, 5rem);
+  font-size: clamp(2.55rem, 13vw, 4.2rem);
   text-shadow: 0 5px 0 rgba(0, 0, 0, 0.16);
+  max-width: 8.4ch;
+  text-wrap: balance;
 }
 
 .heroLead {
