@@ -1,0 +1,385 @@
+.shell {
+  width: min(1240px, calc(100vw - 2rem));
+  margin: 1.5rem auto 2.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.header,
+.panel,
+.reportCard {
+  border: 1px solid var(--panel-border);
+  border-radius: 28px;
+  background: var(--panel-bg);
+  box-shadow: var(--panel-shadow);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.4rem;
+}
+
+.headerCopy {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.kicker {
+  color: var(--accent-strong);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.headerTitle {
+  color: var(--text-primary);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 0.94;
+  text-transform: uppercase;
+}
+
+.headerLead {
+  color: var(--text-soft);
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.secondaryButton,
+.primaryButton,
+.logoutButton {
+  min-height: 46px;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  border: 1px solid var(--panel-border);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.primaryButton {
+  border: 0;
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+.secondaryButton,
+.logoutButton {
+  background: var(--card-bg);
+  color: var(--text-primary);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.rangeTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.rangeTab {
+  min-height: 42px;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rangeTabActive {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border-color: transparent;
+}
+
+.dateInput {
+  min-height: 42px;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--input-border);
+  border-radius: 14px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.kpiGrid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.kpiCard {
+  padding: 1rem;
+  border-radius: 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+.kpiLabel {
+  color: var(--text-soft);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kpiValue {
+  color: var(--text-primary);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  line-height: 1;
+  margin-top: 0.3rem;
+}
+
+.panel {
+  padding: 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.panelTitle {
+  color: var(--text-primary);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 1.5rem;
+  line-height: 0.96;
+  text-transform: uppercase;
+}
+
+.chartGrid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.chartCard {
+  min-height: 320px;
+  padding: 1rem;
+  border-radius: 22px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+}
+
+.chartTitle {
+  color: var(--text-primary);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 1.15rem;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.tableWrap {
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.8rem 0.6rem;
+  border-bottom: 1px solid var(--card-border);
+  text-align: left;
+  color: var(--text-primary);
+  vertical-align: top;
+}
+
+.table th {
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.subtle {
+  color: var(--text-soft);
+}
+
+.reportsGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.reportCard {
+  padding: 1.1rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.reportTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.reportMeta {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: var(--accent-surface);
+  color: var(--accent-contrast);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.reportMessage,
+.followupMessage {
+  white-space: pre-wrap;
+}
+
+.contactRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.chip,
+.waButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+.waButton {
+  background: var(--button-bg);
+  color: var(--button-text);
+  font-family: var(--font-oswald), sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.select {
+  min-height: 42px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--input-border);
+  border-radius: 14px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.followups {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.followupItem {
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+.followupHeader {
+  color: var(--text-soft);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+
+.followupForm {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.followupForm textarea {
+  min-height: 110px;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 18px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  resize: vertical;
+}
+
+.empty,
+.errorBox {
+  padding: 1rem;
+  border-radius: 18px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+}
+
+.errorBox {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  color: var(--error-text);
+}
+
+@media (max-width: 860px) {
+  .header {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .headerActions,
+  .controls,
+  .statusRow {
+    width: 100%;
+  }
+
+  .headerActions {
+    flex-wrap: wrap;
+  }
+
+  .secondaryButton,
+  .primaryButton,
+  .logoutButton,
+  .rangeTab,
+  .select,
+  .dateInput {
+    width: 100%;
+  }
+
+  .reportTop {
+    display: grid;
+  }
+}

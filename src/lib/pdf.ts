@@ -15,9 +15,7 @@ function drawOrderBlock(
   pdf.setFontSize(13);
   pdf.text(title, 22, startY + 8);
 
-  const detailLines = [
-    `Número de orden: ${orden}`,
-  ];
+  const detailLines = [`Número de orden: ${orden}`];
 
   let currentY = startY + 20;
   pdf.setFont("helvetica", "normal");
@@ -87,8 +85,7 @@ export function downloadLookupPdf(result: LookupResponse): void {
   pdf.text(introLines, 16, 68);
 
   const displayName = result.centro?.nombre ?? result.consejo?.nombre ?? "";
-  const displayYear =
-    result.centro?.anioIngreso ?? result.consejo?.anioIngreso ?? "";
+  const displayYear = result.centro?.anioIngreso ?? result.consejo?.anioIngreso ?? "";
   const displayMesa = result.centro?.mesa ?? result.consejo?.mesa ?? "";
 
   let currentY = 68 + introLines.length * 6 + 8;
@@ -112,32 +109,18 @@ export function downloadLookupPdf(result: LookupResponse): void {
 
   currentY += 38;
   if (result.centro) {
-    currentY = drawOrderBlock(
-      pdf,
-      "Centro de Estudiantes",
-      result.centro.orden,
-      currentY,
-    );
+    currentY = drawOrderBlock(pdf, "Centro de Estudiantes", result.centro.orden, currentY);
   }
 
   if (result.consejo) {
-    currentY = drawOrderBlock(
-      pdf,
-      "Consejo Directivo",
-      result.consejo.orden,
-      currentY,
-    );
+    currentY = drawOrderBlock(pdf, "Consejo Directivo", result.consejo.orden, currentY);
   }
 
   pdf.setDrawColor(0, 136, 8);
   pdf.line(16, currentY + 4, 194, currentY + 4);
   pdf.setTextColor(70, 70, 70);
   pdf.setFontSize(10);
-  pdf.text(
-    `Generado el ${new Date().toLocaleString("es-AR")}`,
-    16,
-    currentY + 12,
-  );
+  pdf.text(`Generado el ${new Date().toLocaleString("es-AR")}`, 16, currentY + 12);
 
   const blob = pdf.output("blob");
   const url = URL.createObjectURL(blob);

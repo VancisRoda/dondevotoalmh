@@ -19,6 +19,7 @@
 
 .topbar,
 .lookupSection,
+.reportSection,
 .socialSection,
 .footer {
   width: min(1120px, calc(100vw - 2rem));
@@ -96,6 +97,10 @@
   padding-bottom: 2rem;
   position: relative;
   z-index: 1;
+}
+
+.reportSection {
+  padding: 0 0 1.25rem;
 }
 
 .socialSection {

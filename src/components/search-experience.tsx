@@ -3,10 +3,7 @@
 import { useState, useTransition } from "react";
 
 import { downloadLookupPdf } from "@/lib/pdf";
-import type {
-  LookupErrorResponse,
-  LookupResponse,
-} from "@/lib/types";
+import type { LookupErrorResponse, LookupResponse } from "@/lib/types";
 
 import styles from "./search-experience.module.css";
 
@@ -77,9 +74,7 @@ export function SearchExperience() {
           if (!response.ok) {
             setResult(null);
             setError(
-              "error" in payload
-                ? payload.error
-                : "No pudimos procesar la consulta.",
+              "error" in payload ? payload.error : "No pudimos procesar la consulta.",
             );
             return;
           }

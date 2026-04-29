@@ -1,4 +1,5 @@
 import { SearchExperience } from "@/components/search-experience";
+import { IrregularityReportForm } from "@/components/irregularity-report-form";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 import styles from "./page.module.css";
@@ -103,6 +104,10 @@ export default function Home() {
 
       <section className={styles.lookupSection}>
         <SearchExperience />
+      </section>
+
+      <section className={styles.reportSection}>
+        <IrregularityReportForm />
       </section>
 
       <section className={styles.socialSection} id="redes">

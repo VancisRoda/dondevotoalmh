@@ -1,0 +1,142 @@
+.shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.toggle {
+  justify-self: start;
+  min-height: 54px;
+  padding: 0.9rem 1.2rem;
+  border: 0;
+  border-radius: 18px;
+  background: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.15rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 28px;
+  background: var(--panel-bg);
+  box-shadow: var(--panel-shadow);
+}
+
+.copy {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.kicker {
+  color: var(--accent-strong);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.title {
+  color: var(--text-primary);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: clamp(1.6rem, 4vw, 2.35rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.lead {
+  color: var(--text-soft);
+}
+
+.form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.grid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  color: var(--text-primary);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 18px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.field textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.submit,
+.secondary {
+  min-height: 50px;
+  padding: 0.85rem 1rem;
+  border-radius: 18px;
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.submit {
+  border: 0;
+  background: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+}
+
+.secondary {
+  border: 1px solid var(--panel-border);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.feedback,
+.error {
+  padding: 0.85rem 1rem;
+  border-radius: 18px;
+}
+
+.feedback {
+  background: rgba(0, 136, 8, 0.08);
+  color: var(--text-primary);
+  border: 1px solid rgba(0, 136, 8, 0.16);
+}
+
+.error {
+  background: var(--error-bg);
+  color: var(--error-text);
+  border: 1px solid var(--error-border);
+}

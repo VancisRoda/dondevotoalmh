@@ -1,3 +1,4 @@
+import { recordLookupEvent } from "@/lib/analytics";
 import { isValidDni, lookupDni, normalizeDni } from "@/lib/padron-index";
 import type { LookupErrorResponse, LookupResponse } from "@/lib/types";
 
@@ -16,6 +17,10 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     const response: LookupResponse = lookupDni(dni);
+    void recordLookupEvent(response).catch(() => {
+      // Lookup should remain available even if analytics persistence fails.
+    });
+
     return Response.json(response);
   } catch {
     const errorResponse: LookupErrorResponse = {

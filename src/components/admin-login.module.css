@@ -1,0 +1,84 @@
+.shell {
+  width: min(520px, calc(100vw - 2rem));
+  margin: 4rem auto;
+  padding: 1.5rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 28px;
+  background: var(--panel-bg);
+  box-shadow: var(--panel-shadow);
+}
+
+.copy {
+  display: grid;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.kicker {
+  color: var(--accent-strong);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  color: var(--text-primary);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.description {
+  color: var(--text-soft);
+}
+
+.form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  color: var(--text-primary);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.84rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 18px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.submit {
+  min-height: 54px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.98rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.error {
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  border: 1px solid var(--error-border);
+  background: var(--error-bg);
+  color: var(--error-text);
+}
