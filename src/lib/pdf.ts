@@ -1,11 +1,8 @@
-import autoTable from "jspdf-autotable";
 import { jsPDF } from "jspdf";
 
 import {
   distributionStatusMessage,
-  distributionSummaryLabel,
   getCentroDistributionForLookup,
-  getMesaDistributionRules,
 } from "@/lib/mesa-distribution";
 import type { LookupResponse } from "@/lib/types";
 
@@ -95,7 +92,6 @@ export function downloadLookupPdf(result: LookupResponse): void {
   const displayYear = result.centro?.anioIngreso ?? result.consejo?.anioIngreso ?? "";
   const displayMesa = result.centro?.mesa ?? result.consejo?.mesa ?? "";
   const centroDistribution = getCentroDistributionForLookup(result);
-  const distributionRules = getMesaDistributionRules();
 
   let currentY = 68 + introLines.length * 6 + 8;
 
@@ -127,17 +123,14 @@ export function downloadLookupPdf(result: LookupResponse): void {
 
   if (centroDistribution) {
     pdf.setFillColor(245, 247, 242);
-    pdf.roundedRect(16, currentY, 178, 26, 4, 4, "F");
+    pdf.roundedRect(16, currentY, 178, 18, 4, 4, "F");
     pdf.setTextColor(18, 61, 18);
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(12);
     pdf.text("Distribución de mesas informada", 22, currentY + 8);
     pdf.setFont("helvetica", "normal");
     pdf.setFontSize(10.5);
-    const distributionLines = pdf.splitTextToSize(
-      `${distributionSummaryLabel(centroDistribution)}. ${distributionStatusMessage(centroDistribution)}`,
-      166,
-    );
+    const distributionLines = pdf.splitTextToSize(distributionStatusMessage(centroDistribution), 166);
     pdf.text(distributionLines, 22, currentY + 15);
     currentY += 18 + distributionLines.length * 5;
   }
@@ -147,44 +140,6 @@ export function downloadLookupPdf(result: LookupResponse): void {
   pdf.setTextColor(70, 70, 70);
   pdf.setFontSize(10);
   pdf.text(`Generado el ${new Date().toLocaleString("es-AR")}`, 16, currentY + 12);
-
-  pdf.addPage("a4", "portrait");
-  pdf.setFillColor(0, 107, 9);
-  pdf.rect(0, 0, 210, 24, "F");
-  pdf.setTextColor(255, 255, 255);
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(18);
-  pdf.text("Distribución oficial de mesas", 16, 15);
-
-  autoTable(pdf, {
-    head: [["Mesa", "Criterio", "Ubicacion"]],
-    body: distributionRules.map((rule) => [
-      `Mesa ${rule.mesa}`,
-      rule.description,
-      rule.location,
-    ]),
-    startY: 32,
-    styles: {
-      font: "helvetica",
-      fontSize: 9,
-      cellPadding: 2.2,
-      textColor: [18, 61, 18],
-    },
-    headStyles: {
-      fillColor: [0, 136, 8],
-      textColor: [255, 255, 255],
-      fontStyle: "bold",
-    },
-    alternateRowStyles: {
-      fillColor: [245, 247, 242],
-    },
-    margin: { left: 16, right: 16 },
-    columnStyles: {
-      0: { cellWidth: 28 },
-      1: { cellWidth: 96 },
-      2: { cellWidth: 50 },
-    },
-  });
 
   const blob = pdf.output("blob");
   const url = URL.createObjectURL(blob);

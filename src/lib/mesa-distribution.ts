@@ -91,19 +91,9 @@ export function getCentroDistributionForLookup(
 }
 
 export function distributionSummaryLabel(match: MesaDistributionMatch): string {
-  return `Mesa ${match.rule.mesa} - ${match.rule.location}`;
+  return `Votás en la Mesa ${match.rule.mesa}, ${match.rule.location}.`;
 }
 
 export function distributionStatusMessage(match: MesaDistributionMatch): string {
-  if (match.matchesRecordedMesa) {
-    return (
-      `Según el año de ingreso y la inicial del apellido, la distribución oficial ` +
-      `te ubica en la mesa ${match.rule.mesa}, ${match.rule.location}.`
-    );
-  }
-
-  return (
-    `Según la distribución oficial te corresponde la mesa ${match.rule.mesa}, ` +
-    `${match.rule.location}. En el padrón cargado figura la mesa ${match.recordedMesa}.`
-  );
+  return `Votás en la Mesa ${match.rule.mesa}, ${match.rule.location}.`;
 }

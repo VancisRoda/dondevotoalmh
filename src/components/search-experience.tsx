@@ -4,9 +4,7 @@ import { useState, useTransition } from "react";
 
 import {
   distributionStatusMessage,
-  distributionSummaryLabel,
   getCentroDistributionForLookup,
-  getMesaDistributionRules,
 } from "@/lib/mesa-distribution";
 import { downloadLookupPdf } from "@/lib/pdf";
 import type { LookupErrorResponse, LookupResponse } from "@/lib/types";
@@ -58,7 +56,6 @@ export function SearchExperience() {
 
   const canDownload = Boolean(result && result.participation !== "no_encontrado");
   const centroDistribution = result ? getCentroDistributionForLookup(result) : null;
-  const distributionRules = getMesaDistributionRules();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -164,27 +161,9 @@ export function SearchExperience() {
             {centroDistribution ? (
               <article className={styles.distributionCard}>
                 <span className={styles.statusEyebrow}>Distribución informada</span>
-                <div className={styles.distributionHeader}>
-                  <strong>{distributionSummaryLabel(centroDistribution)}</strong>
-                  <span>{centroDistribution.rule.description}</span>
-                </div>
                 <p>{distributionStatusMessage(centroDistribution)}</p>
               </article>
             ) : null}
-
-            <article className={styles.distributionListCard}>
-              <span className={styles.statusEyebrow}>Mesas por ingreso</span>
-              <h4>Se informa la siguiente distribución de mesas, conforme al año de ingreso</h4>
-              <div className={styles.distributionList}>
-                {distributionRules.map((rule) => (
-                  <div className={styles.distributionRow} key={rule.mesa}>
-                    <strong>{`Mesa ${rule.mesa}`}</strong>
-                    <span>{rule.description}</span>
-                    <span>{rule.location}</span>
-                  </div>
-                ))}
-              </div>
-            </article>
 
             <div className={styles.actions}>
               <button
