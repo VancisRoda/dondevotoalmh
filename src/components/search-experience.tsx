@@ -27,11 +27,9 @@ function normalizeDniInput(rawDni: string): string {
 
 function VoteCard({
   title,
-  mesa,
   orden,
 }: {
   title: string;
-  mesa: string;
   orden: string;
 }) {
   return (
@@ -40,10 +38,6 @@ function VoteCard({
         <h4>{title}</h4>
       </header>
       <div className={styles.voteCardMetrics}>
-        <div className={styles.singleMetric}>
-          <span className={styles.metricLabel}>Mesa</span>
-          <strong className={styles.metricValue}>{mesa}</strong>
-        </div>
         <div className={styles.singleMetric}>
           <span className={styles.metricLabel}>Número de orden</span>
           <strong className={styles.metricValue}>{orden}</strong>
@@ -141,36 +135,26 @@ export function SearchExperience() {
         {result && result.participation !== "no_encontrado" ? (
           <>
             <article className={styles.personCard}>
-              <div className={styles.voteMetaRow}>
-                <div className={styles.metric}>
-                  <span className={styles.metricLabel}>Mesa</span>
-                  <strong className={styles.metricValue}>
-                    {result.centro?.mesa ?? result.consejo?.mesa}
-                  </strong>
-                </div>
-                <div className={styles.personText}>
-                  <span className={styles.votePlace}>{mesaLocationDisplay}</span>
-                  <span className={styles.voteName}>
-                    {result.centro?.nombre ?? result.consejo?.nombre}
-                  </span>
-                  <span className={styles.voteYear}>
-                    Ingreso {result.centro?.anioIngreso ?? result.consejo?.anioIngreso}
-                  </span>
-                </div>
+              <div className={styles.personText}>
+                <span className={styles.votePlace}>{mesaLocationDisplay}</span>
+                <span className={styles.voteName}>
+                  {result.centro?.nombre ?? result.consejo?.nombre}
+                </span>
+                <span className={styles.voteYear}>
+                  Ingreso {result.centro?.anioIngreso ?? result.consejo?.anioIngreso}
+                </span>
               </div>
             </article>
 
             <div className={styles.voteGrid}>
               {result.centro ? (
                 <VoteCard
-                  mesa={result.centro.mesa}
                   orden={result.centro.orden}
                   title="Centro de Estudiantes"
                 />
               ) : null}
               {result.consejo ? (
                 <VoteCard
-                  mesa={result.consejo.mesa}
                   orden={result.consejo.orden}
                   title="Consejo Directivo"
                 />

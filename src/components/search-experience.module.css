@@ -141,6 +141,7 @@
 }
 
 .personCard {
+  display: grid;
   padding: 1.25rem;
   border-radius: 24px;
   border: 1px solid var(--card-border);
@@ -166,13 +167,6 @@
   font-size: 1.55rem;
   line-height: 0.94;
   text-transform: uppercase;
-}
-
-.voteMetaRow {
-  display: grid;
-  grid-template-columns: minmax(120px, 160px) 1fr;
-  gap: 0.8rem;
-  align-items: center;
 }
 
 .metric {
@@ -268,10 +262,6 @@
 
 @media (max-width: 780px) {
   .formControls {
-    grid-template-columns: 1fr;
-  }
-
-  .voteMetaRow {
     grid-template-columns: 1fr;
   }
 

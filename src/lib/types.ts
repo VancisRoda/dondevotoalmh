@@ -102,6 +102,7 @@ export interface IrregularityFollowup {
 
 export interface IrregularityReport {
   id: number;
+  publicCode: string | null;
   message: string;
   dni: string | null;
   fullName: string | null;
@@ -120,6 +121,23 @@ export interface IrregularityReportCreatePayload {
   fullName?: string;
   email?: string;
   phone?: string;
+  submissionToken?: string;
+}
+
+export interface IrregularityReportReceipt {
+  id: number;
+  publicCode: string;
+  message: string;
+  dni: string | null;
+  fullName: string | null;
+  email: string | null;
+  phoneRaw: string | null;
+  createdAt: string;
+}
+
+export interface IrregularityReportCreateResponse {
+  ok: true;
+  report: IrregularityReportReceipt;
 }
 
 export interface AdminLoginPayload {

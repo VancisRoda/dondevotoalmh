@@ -1,22 +1,23 @@
 import { createIrregularityReport } from "@/lib/analytics";
 import type {
   ApiMessageResponse,
-  ApiOkResponse,
+  IrregularityReportCreateResponse,
   IrregularityReportCreatePayload,
 } from "@/lib/types";
 
 export async function POST(request: Request): Promise<Response> {
   try {
     const payload = (await request.json()) as IrregularityReportCreatePayload;
-    await createIrregularityReport({
+    const report = await createIrregularityReport({
       message: payload.message ?? "",
       dni: payload.dni,
       fullName: payload.fullName,
       email: payload.email,
       phone: payload.phone,
+      submissionToken: payload.submissionToken,
     });
 
-    const response: ApiOkResponse = { ok: true };
+    const response: IrregularityReportCreateResponse = { ok: true, report };
     return Response.json(response);
   } catch (error) {
     const response: ApiMessageResponse = {

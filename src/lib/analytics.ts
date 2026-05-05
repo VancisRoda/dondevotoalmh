@@ -1,3 +1,5 @@
+import { randomInt } from "node:crypto";
+
 import { withDatabase } from "@/lib/db";
 import { getTimezone } from "@/lib/env";
 import { getTodayDateString, participationLabel } from "@/lib/format";
@@ -10,11 +12,14 @@ import type {
   AdminStatsResponse,
   IrregularityFollowup,
   IrregularityReport,
+  IrregularityReportReceipt,
   LookupEvent,
   LookupResponse,
   ReportStatus,
   StatsRange,
 } from "@/lib/types";
+
+type SqlClient = Parameters<Parameters<typeof withDatabase>[0]>[0];
 
 interface CountRow {
   count: number;
@@ -57,7 +62,9 @@ interface LookupEventRow {
 
 interface ReportRow {
   id: number;
+  public_code: string | null;
   message: string;
+  submission_token?: string | null;
   dni: string | null;
   full_name: string | null;
   email: string | null;
@@ -116,8 +123,84 @@ function getRangeFilter(
   };
 }
 
+interface CreatedReportRow {
+  id: number;
+  public_code: string | null;
+  message: string;
+  dni: string | null;
+  full_name: string | null;
+  email: string | null;
+  phone_raw: string | null;
+  created_at: string;
+}
+
 function ensureSelectedDate(value: string | null | undefined): string {
   return value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : getTodayDateString();
+}
+
+function mapReportReceiptRow(row: CreatedReportRow): IrregularityReportReceipt {
+  if (!row.public_code) {
+    throw new Error("La denuncia fue creada sin código público.");
+  }
+
+  return {
+    id: row.id,
+    publicCode: row.public_code,
+    message: row.message,
+    dni: row.dni,
+    fullName: row.full_name,
+    email: row.email,
+    phoneRaw: row.phone_raw,
+    createdAt: row.created_at,
+  };
+}
+
+async function generateUniqueIrregularityPublicCode(
+  sql: SqlClient,
+): Promise<string> {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const publicCode = String(randomInt(100000, 1000000));
+    const existingRows = (await sql.query<false, false>(
+      `
+      SELECT id
+      FROM irregularity_reports
+      WHERE public_code = $1
+      LIMIT 1
+      `,
+      [publicCode],
+    )) as unknown as Array<{ id: number }>;
+
+    if (existingRows.length === 0) {
+      return publicCode;
+    }
+  }
+
+  throw new Error("No pudimos generar un código de denuncia único.");
+}
+
+async function getIrregularityReceiptBySubmissionToken(
+  sql: SqlClient,
+  submissionToken: string,
+): Promise<IrregularityReportReceipt | null> {
+  const existingRows = (await sql.query<false, false>(
+    `
+    SELECT
+      id,
+      public_code,
+      message,
+      dni,
+      full_name,
+      email,
+      phone_raw,
+      created_at
+    FROM irregularity_reports
+    WHERE submission_token = $1
+    LIMIT 1
+    `,
+    [submissionToken],
+  )) as unknown as CreatedReportRow[];
+
+  return existingRows[0] ? mapReportReceiptRow(existingRows[0]) : null;
 }
 
 export async function recordLookupEvent(result: LookupResponse): Promise<void> {
@@ -158,30 +241,76 @@ export async function createIrregularityReport(input: {
   fullName?: string;
   email?: string;
   phone?: string;
-}): Promise<void> {
+  submissionToken?: string;
+}): Promise<IrregularityReportReceipt> {
   const message = input.message.trim();
   if (!message) {
     throw new Error("Debes ingresar un mensaje.");
   }
 
-  await withDatabase(async (sql) => {
-    await sql`
-      INSERT INTO irregularity_reports (
-        message,
-        dni,
-        full_name,
-        email,
-        phone_raw,
-        phone_whatsapp
-      ) VALUES (
-        ${message},
-        ${normalizeOptionalDni(input.dni)},
-        ${normalizeOptionalText(input.fullName)},
-        ${normalizeOptionalText(input.email)},
-        ${normalizeOptionalText(input.phone)},
-        ${normalizeWhatsappPhone(input.phone)}
-      )
-    `;
+  return withDatabase(async (sql) => {
+    const submissionToken = normalizeOptionalText(input.submissionToken);
+    if (submissionToken) {
+      const existingReceipt = await getIrregularityReceiptBySubmissionToken(
+        sql,
+        submissionToken,
+      );
+      if (existingReceipt) {
+        return existingReceipt;
+      }
+    }
+
+    const publicCode = await generateUniqueIrregularityPublicCode(sql);
+    try {
+      const insertedRows = (await sql`
+        INSERT INTO irregularity_reports (
+          public_code,
+          message,
+          submission_token,
+          dni,
+          full_name,
+          email,
+          phone_raw,
+          phone_whatsapp
+        ) VALUES (
+          ${publicCode},
+          ${message},
+          ${submissionToken},
+          ${normalizeOptionalDni(input.dni)},
+          ${normalizeOptionalText(input.fullName)},
+          ${normalizeOptionalText(input.email)},
+          ${normalizeOptionalText(input.phone)},
+          ${normalizeWhatsappPhone(input.phone)}
+        )
+        RETURNING
+          id,
+          public_code,
+          message,
+          dni,
+          full_name,
+          email,
+          phone_raw,
+          created_at
+      `) as unknown as CreatedReportRow[];
+
+      return mapReportReceiptRow(insertedRows[0]);
+    } catch (error) {
+      if (
+        submissionToken &&
+        error instanceof Error &&
+        error.message.includes("irregularity_reports_submission_token_idx")
+      ) {
+        const existingReceipt = await getIrregularityReceiptBySubmissionToken(
+          sql,
+          submissionToken,
+        );
+        if (existingReceipt) {
+          return existingReceipt;
+        }
+      }
+
+      throw error;
+    }
   });
 }
 
@@ -233,6 +362,7 @@ export async function getIrregularityReports(
       `
       SELECT
         id,
+        public_code,
         message,
         dni,
         full_name,
@@ -275,6 +405,7 @@ export async function getIrregularityReports(
 
     return reportRows.map((row) => ({
       id: row.id,
+      publicCode: row.public_code,
       message: row.message,
       dni: row.dni,
       fullName: row.full_name,

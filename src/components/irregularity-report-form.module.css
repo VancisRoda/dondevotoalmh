@@ -109,6 +109,13 @@
   text-transform: uppercase;
 }
 
+.submit:disabled,
+.secondary:disabled,
+.toggle:disabled {
+  opacity: 0.66;
+  cursor: wait;
+}
+
 .submit {
   border: 0;
   background: var(--button-bg);
@@ -133,6 +140,26 @@
   background: rgba(0, 136, 8, 0.08);
   color: var(--text-primary);
   border: 1px solid rgba(0, 136, 8, 0.16);
+}
+
+.receiptCard {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-radius: 18px;
+  background: rgba(0, 136, 8, 0.08);
+  border: 1px solid rgba(0, 136, 8, 0.16);
+}
+
+.receiptCode {
+  color: var(--text-primary);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .error {
