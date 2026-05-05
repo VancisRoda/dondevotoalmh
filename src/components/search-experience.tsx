@@ -2,10 +2,7 @@
 
 import { useState, useTransition } from "react";
 
-import {
-  distributionStatusMessage,
-  getCentroDistributionForLookup,
-} from "@/lib/mesa-distribution";
+import { getCentroDistributionForLookup } from "@/lib/mesa-distribution";
 import { downloadLookupPdf } from "@/lib/pdf";
 import type { LookupErrorResponse, LookupResponse } from "@/lib/types";
 
@@ -56,6 +53,11 @@ export function SearchExperience() {
 
   const canDownload = Boolean(result && result.participation !== "no_encontrado");
   const centroDistribution = result ? getCentroDistributionForLookup(result) : null;
+  const displayRecord = result?.centro ?? result?.consejo ?? null;
+  const mesaDisplay = displayRecord?.mesa ? `Mesa ${displayRecord.mesa}` : "";
+  const mesaLocationDisplay = centroDistribution
+    ? `${mesaDisplay}, ${centroDistribution.rule.location}`
+    : mesaDisplay;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -139,6 +141,7 @@ export function SearchExperience() {
                   </strong>
                 </div>
                 <div className={styles.personText}>
+                  <span className={styles.votePlace}>{mesaLocationDisplay}</span>
                   <span className={styles.voteName}>
                     {result.centro?.nombre ?? result.consejo?.nombre}
                   </span>
@@ -157,13 +160,6 @@ export function SearchExperience() {
                 <VoteCard orden={result.consejo.orden} title="Consejo Directivo" />
               ) : null}
             </div>
-
-            {centroDistribution ? (
-              <article className={styles.distributionCard}>
-                <span className={styles.statusEyebrow}>Distribución informada</span>
-                <p>{distributionStatusMessage(centroDistribution)}</p>
-              </article>
-            ) : null}
 
             <div className={styles.actions}>
               <button

@@ -21,7 +21,7 @@ export async function GET(request: Request): Promise<Response> {
 
     const [stats, reports] = await Promise.all([
       getAdminStats(range, selectedDate),
-      getIrregularityReports(),
+      getIrregularityReports(range, selectedDate),
     ]);
 
     const pdfBytes = buildAdminReportPdf(stats, reports);

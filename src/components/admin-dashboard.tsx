@@ -69,41 +69,59 @@ export function AdminDashboard({ initialDate }: AdminDashboardProps) {
   const [stats, setStats] = useState<AdminStatsResponse>(EMPTY_STATS);
   const [reports, setReports] = useState<IrregularityReport[]>([]);
   const [error, setError] = useState("");
+  const [reportsError, setReportsError] = useState("");
   const [loading, setLoading] = useState(true);
   const [followupDrafts, setFollowupDrafts] = useState<Record<number, string>>({});
   const [isPending, startTransition] = useTransition();
 
   const loadDashboard = useCallback(async () => {
     setError("");
+    setReportsError("");
 
-    try {
-      const statsUrl = new URL("/api/admin/stats", window.location.origin);
-      statsUrl.searchParams.set("range", range);
-      if (selectedDate) {
-        statsUrl.searchParams.set("date", selectedDate);
-      }
-
-      const [statsResponse, reportsResponse] = await Promise.all([
-        fetch(statsUrl.toString(), { cache: "no-store" }),
-        fetch("/api/admin/reports", { cache: "no-store" }),
-      ]);
-
-      const [statsPayload, reportsPayload] = await Promise.all([
-        parseJsonOrThrow<AdminStatsResponse>(statsResponse),
-        parseJsonOrThrow<IrregularityReport[]>(reportsResponse),
-      ]);
-
-      setStats(statsPayload);
-      setReports(reportsPayload);
-    } catch (caughtError) {
-      setError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "No pudimos cargar el panel.",
-      );
-    } finally {
-      setLoading(false);
+    const statsUrl = new URL("/api/admin/stats", window.location.origin);
+    statsUrl.searchParams.set("range", range);
+    if (selectedDate) {
+      statsUrl.searchParams.set("date", selectedDate);
     }
+
+    const reportsUrl = new URL("/api/admin/reports", window.location.origin);
+    reportsUrl.searchParams.set("range", range);
+    if (selectedDate) {
+      reportsUrl.searchParams.set("date", selectedDate);
+    }
+
+    const [statsResult, reportsResult] = await Promise.allSettled([
+      fetch(statsUrl.toString(), { cache: "no-store" }).then((response) =>
+        parseJsonOrThrow<AdminStatsResponse>(response),
+      ),
+      fetch(reportsUrl.toString(), { cache: "no-store" }).then((response) =>
+        parseJsonOrThrow<IrregularityReport[]>(response),
+      ),
+    ]);
+
+    if (statsResult.status === "fulfilled") {
+      setStats(statsResult.value);
+    } else {
+      setStats(EMPTY_STATS);
+      setError(
+        statsResult.reason instanceof Error
+          ? statsResult.reason.message
+          : "No pudimos cargar las estadísticas.",
+      );
+    }
+
+    if (reportsResult.status === "fulfilled") {
+      setReports(reportsResult.value);
+    } else {
+      setReports([]);
+      setReportsError(
+        reportsResult.reason instanceof Error
+          ? reportsResult.reason.message
+          : "No pudimos cargar las denuncias.",
+      );
+    }
+
+    setLoading(false);
   }, [range, selectedDate]);
 
   useEffect(() => {
@@ -181,6 +199,13 @@ export function AdminDashboard({ initialDate }: AdminDashboardProps) {
   const reportPdfUrl = `/api/admin/reports/pdf?range=${range}${
     selectedDate ? `&date=${selectedDate}` : ""
   }`;
+
+  const emptyReportsMessage =
+    range === "day"
+      ? "No se registran denuncias en el día de hoy."
+      : range === "week"
+        ? "No se registran denuncias en los últimos 7 días."
+        : "Todavía no hay denuncias registradas.";
 
   return (
     <section className={styles.shell}>
@@ -413,8 +438,10 @@ export function AdminDashboard({ initialDate }: AdminDashboardProps) {
 
           <section className={styles.panel}>
             <h2 className={styles.panelTitle}>Denuncias</h2>
-            {reports.length === 0 ? (
-              <div className={styles.empty}>Todavía no hay denuncias registradas.</div>
+            {reportsError ? (
+              <div className={styles.errorBox}>{reportsError}</div>
+            ) : reports.length === 0 ? (
+              <div className={styles.empty}>{emptyReportsMessage}</div>
             ) : (
               <div className={styles.reportsGrid}>
                 {reports.map((report) => (

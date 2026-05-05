@@ -1,9 +1,6 @@
 import { jsPDF } from "jspdf";
 
-import {
-  distributionStatusMessage,
-  getCentroDistributionForLookup,
-} from "@/lib/mesa-distribution";
+import { getCentroDistributionForLookup } from "@/lib/mesa-distribution";
 import type { LookupResponse } from "@/lib/types";
 
 function drawOrderBlock(
@@ -92,47 +89,30 @@ export function downloadLookupPdf(result: LookupResponse): void {
   const displayYear = result.centro?.anioIngreso ?? result.consejo?.anioIngreso ?? "";
   const displayMesa = result.centro?.mesa ?? result.consejo?.mesa ?? "";
   const centroDistribution = getCentroDistributionForLookup(result);
+  const mesaLocationLine = centroDistribution
+    ? `Mesa ${displayMesa}, ${centroDistribution.rule.location}`
+    : `Mesa ${displayMesa}`;
 
   let currentY = 68 + introLines.length * 6 + 8;
 
-  const summaryLines = [
-    `Apellido y nombre: ${displayName}`,
-    `Año de ingreso: ${displayYear}`,
-    `Mesa de votación: ${displayMesa}`,
-  ];
-
   pdf.setFillColor(245, 247, 242);
-  pdf.roundedRect(16, currentY, 178, 28, 4, 4, "F");
+  pdf.roundedRect(16, currentY, 178, 32, 4, 4, "F");
   pdf.setTextColor(18, 61, 18);
   pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(12);
-  let summaryY = currentY + 8;
-  for (const line of summaryLines) {
-    pdf.text(line, 22, summaryY);
-    summaryY += 7;
-  }
+  pdf.setFontSize(14);
+  pdf.text(mesaLocationLine, 22, currentY + 9);
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(11);
+  pdf.text(`Apellido y nombre: ${displayName}`, 22, currentY + 18);
+  pdf.text(`Año de ingreso: ${displayYear}`, 22, currentY + 25);
 
-  currentY += 38;
+  currentY += 42;
   if (result.centro) {
     currentY = drawOrderBlock(pdf, "Centro de Estudiantes", result.centro.orden, currentY);
   }
 
   if (result.consejo) {
     currentY = drawOrderBlock(pdf, "Consejo Directivo", result.consejo.orden, currentY);
-  }
-
-  if (centroDistribution) {
-    pdf.setFillColor(245, 247, 242);
-    pdf.roundedRect(16, currentY, 178, 18, 4, 4, "F");
-    pdf.setTextColor(18, 61, 18);
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(12);
-    pdf.text("Distribución de mesas informada", 22, currentY + 8);
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(10.5);
-    const distributionLines = pdf.splitTextToSize(distributionStatusMessage(centroDistribution), 166);
-    pdf.text(distributionLines, 22, currentY + 15);
-    currentY += 18 + distributionLines.length * 5;
   }
 
   pdf.setDrawColor(0, 136, 8);

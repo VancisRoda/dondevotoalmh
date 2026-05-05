@@ -74,6 +74,91 @@ export async function ensureDatabaseSchema(): Promise<void> {
     `;
 
     await sql`
+      ALTER TABLE irregularity_reports
+      ADD COLUMN IF NOT EXISTS full_name TEXT
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ADD COLUMN IF NOT EXISTS email TEXT
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ADD COLUMN IF NOT EXISTS phone_raw TEXT
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ADD COLUMN IF NOT EXISTS phone_whatsapp TEXT
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ADD COLUMN IF NOT EXISTS status TEXT
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ
+    `;
+
+    await sql`
+      UPDATE irregularity_reports
+      SET
+        status = COALESCE(status, 'new'),
+        created_at = COALESCE(created_at, NOW()),
+        updated_at = COALESCE(updated_at, created_at, NOW())
+      WHERE status IS NULL OR created_at IS NULL OR updated_at IS NULL
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ALTER COLUMN status SET DEFAULT 'new'
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ALTER COLUMN created_at SET DEFAULT NOW()
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ALTER COLUMN updated_at SET DEFAULT NOW()
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ALTER COLUMN status SET NOT NULL
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ALTER COLUMN created_at SET NOT NULL
+    `;
+
+    await sql`
+      ALTER TABLE irregularity_reports
+      ALTER COLUMN updated_at SET NOT NULL
+    `;
+
+    await sql.query(`
+      ALTER TABLE irregularity_reports
+      DROP CONSTRAINT IF EXISTS irregularity_reports_status_check
+    `);
+
+    await sql.query(`
+      ALTER TABLE irregularity_reports
+      ADD CONSTRAINT irregularity_reports_status_check
+      CHECK (status IN ('new', 'in_progress', 'closed'))
+    `);
+
+    await sql`
       CREATE TABLE IF NOT EXISTS irregularity_followups (
         id BIGSERIAL PRIMARY KEY,
         report_id BIGINT NOT NULL REFERENCES irregularity_reports(id) ON DELETE CASCADE,

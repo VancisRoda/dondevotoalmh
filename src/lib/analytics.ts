@@ -91,7 +91,11 @@ function mapLookupEventRow(row: LookupEventRow): LookupEvent {
   };
 }
 
-function getRangeFilter(range: StatsRange, selectedDate: string) {
+function getRangeFilter(
+  range: StatsRange,
+  selectedDate: string,
+  columnName: "consulted_at" | "created_at",
+) {
   if (range === "total") {
     return {
       sql: "TRUE",
@@ -101,13 +105,13 @@ function getRangeFilter(range: StatsRange, selectedDate: string) {
 
   if (range === "day") {
     return {
-      sql: `timezone('${getTimezone()}', consulted_at)::date = $1::date`,
+      sql: `timezone('${getTimezone()}', ${columnName})::date = $1::date`,
       params: [selectedDate],
     };
   }
 
   return {
-    sql: `timezone('${getTimezone()}', consulted_at)::date BETWEEN ($1::date - INTERVAL '6 day') AND $1::date`,
+    sql: `timezone('${getTimezone()}', ${columnName})::date BETWEEN ($1::date - INTERVAL '6 day') AND $1::date`,
     params: [selectedDate],
   };
 }
@@ -217,7 +221,13 @@ export async function addIrregularityFollowup(
   });
 }
 
-export async function getIrregularityReports(): Promise<IrregularityReport[]> {
+export async function getIrregularityReports(
+  range: StatsRange = "total",
+  selectedDateInput?: string | null,
+): Promise<IrregularityReport[]> {
+  const selectedDate = ensureSelectedDate(selectedDateInput);
+  const { sql: filterSql, params } = getRangeFilter(range, selectedDate, "created_at");
+
   return withDatabase(async (sql) => {
     const reportRows = (await sql.query<false, false>(
       `
@@ -233,8 +243,10 @@ export async function getIrregularityReports(): Promise<IrregularityReport[]> {
         created_at,
         updated_at
       FROM irregularity_reports
+      WHERE ${filterSql}
       ORDER BY created_at DESC
       `,
+      params,
     )) as unknown as ReportRow[];
 
     const followupRows = (await sql.query<false, false>(
@@ -311,7 +323,7 @@ export async function getAdminStats(
   selectedDateInput?: string | null,
 ): Promise<AdminStatsResponse> {
   const selectedDate = ensureSelectedDate(selectedDateInput);
-  const { sql: filterSql, params } = getRangeFilter(range, selectedDate);
+  const { sql: filterSql, params } = getRangeFilter(range, selectedDate, "consulted_at");
 
   return withDatabase(async (sql) => {
     const totalRows = (await sql.query<false, false>(
