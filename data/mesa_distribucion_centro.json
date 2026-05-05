@@ -1,0 +1,162 @@
+[
+  {
+    "mesa": "1",
+    "description": "Ingreso 1973 a 1999",
+    "location": "AULA EX IDELA",
+    "yearStart": 1973,
+    "yearEnd": 1999
+  },
+  {
+    "mesa": "2",
+    "description": "Ingreso 2000 a 2004",
+    "location": "AULA TUTORIAS",
+    "yearStart": 2000,
+    "yearEnd": 2004
+  },
+  {
+    "mesa": "3",
+    "description": "Ingreso 2005 a 2009",
+    "location": "INFORME Y GESTION",
+    "yearStart": 2005,
+    "yearEnd": 2009
+  },
+  {
+    "mesa": "4",
+    "description": "Ingreso 2010 a 2013",
+    "location": "AULA 5",
+    "yearStart": 2010,
+    "yearEnd": 2013
+  },
+  {
+    "mesa": "5",
+    "description": "Ingreso 2014 a 2015",
+    "location": "AULA 5",
+    "yearStart": 2014,
+    "yearEnd": 2015
+  },
+  {
+    "mesa": "6",
+    "description": "Ingreso 2016 a 2017",
+    "location": "AULA 4",
+    "yearStart": 2016,
+    "yearEnd": 2017
+  },
+  {
+    "mesa": "7",
+    "description": "Ingreso 2018",
+    "location": "AULA 3",
+    "yearStart": 2018,
+    "yearEnd": 2018
+  },
+  {
+    "mesa": "8",
+    "description": "Ingreso 2019",
+    "location": "AULA 3",
+    "yearStart": 2019,
+    "yearEnd": 2019
+  },
+  {
+    "mesa": "9",
+    "description": "Ingreso 2020",
+    "location": "AULA 9",
+    "yearStart": 2020,
+    "yearEnd": 2020
+  },
+  {
+    "mesa": "10",
+    "description": "Ingreso 2021",
+    "location": "AULA 13",
+    "yearStart": 2021,
+    "yearEnd": 2021
+  },
+  {
+    "mesa": "11",
+    "description": "Ingreso 2022, de la letra A a la L",
+    "location": "AULA 14",
+    "yearStart": 2022,
+    "yearEnd": 2022,
+    "letterStart": "A",
+    "letterEnd": "L"
+  },
+  {
+    "mesa": "12",
+    "description": "Ingreso 2022, de la letra M a la Z",
+    "location": "CENTRO DE GRADUADOS",
+    "yearStart": 2022,
+    "yearEnd": 2022,
+    "letterStart": "M",
+    "letterEnd": "Z"
+  },
+  {
+    "mesa": "13",
+    "description": "Ingreso 2023, de la letra A a la K",
+    "location": "PATIO CASA REMIS",
+    "yearStart": 2023,
+    "yearEnd": 2023,
+    "letterStart": "A",
+    "letterEnd": "K"
+  },
+  {
+    "mesa": "14",
+    "description": "Ingreso 2023, de la letra L a la Z",
+    "location": "PATIO CASA REMIS",
+    "yearStart": 2023,
+    "yearEnd": 2023,
+    "letterStart": "L",
+    "letterEnd": "Z"
+  },
+  {
+    "mesa": "15",
+    "description": "Ingreso 2024, de la letra A a la F",
+    "location": "PATIO CASA REMIS",
+    "yearStart": 2024,
+    "yearEnd": 2024,
+    "letterStart": "A",
+    "letterEnd": "F"
+  },
+  {
+    "mesa": "16",
+    "description": "Ingreso 2024, de la letra G a la O",
+    "location": "AULA MAGNA",
+    "yearStart": 2024,
+    "yearEnd": 2024,
+    "letterStart": "G",
+    "letterEnd": "O"
+  },
+  {
+    "mesa": "17",
+    "description": "Ingreso 2024, de la letra P a la Z",
+    "location": "AULA MAGNA",
+    "yearStart": 2024,
+    "yearEnd": 2024,
+    "letterStart": "P",
+    "letterEnd": "Z"
+  },
+  {
+    "mesa": "18",
+    "description": "Ingreso 2025, de la letra A a la E",
+    "location": "AULA NORTE",
+    "yearStart": 2025,
+    "yearEnd": 2025,
+    "letterStart": "A",
+    "letterEnd": "E"
+  },
+  {
+    "mesa": "19",
+    "description": "Ingreso 2025, de la letra F a la M",
+    "location": "AULA SUR",
+    "yearStart": 2025,
+    "yearEnd": 2025,
+    "letterStart": "F",
+    "letterEnd": "M"
+  },
+  {
+    "mesa": "20",
+    "description": "Ingreso 2025, de la letra N a la Z",
+    "location": "PRIMER PISO",
+    "yearStart": 2025,
+    "yearEnd": 2025,
+    "letterStart": "N",
+    "letterEnd": "Z"
+  }
+]

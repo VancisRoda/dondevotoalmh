@@ -19,9 +19,13 @@ interface LoadedPadron {
 let cachedIndex: PadronIndex | null = null;
 
 const DATA_FILES: Record<PadronKind, string> = {
-  centro: "Padron_centro_final.csv",
+  centro: "padron_centro_desde_txt.csv",
   consejo: "padron_consejo_final.csv",
 };
+
+function sanitizePadronText(value: string): string {
+  return value.replace(/\u0092/g, "'").replace(/\s+/g, " ").trim();
+}
 
 function parseCsvLine(line: string): string[] {
   const columns: string[] = [];
@@ -69,10 +73,10 @@ function buildRecord(columns: string[]): VoteRecord | null {
   }
 
   return {
-    nombre,
-    orden,
-    mesa,
-    anioIngreso,
+    nombre: sanitizePadronText(nombre),
+    orden: sanitizePadronText(orden),
+    mesa: sanitizePadronText(mesa),
+    anioIngreso: sanitizePadronText(anioIngreso),
     dni: normalizedDni,
   };
 }
