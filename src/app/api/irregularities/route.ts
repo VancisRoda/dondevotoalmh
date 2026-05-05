@@ -14,7 +14,6 @@ export async function POST(request: Request): Promise<Response> {
       fullName: payload.fullName,
       email: payload.email,
       phone: payload.phone,
-      submissionToken: payload.submissionToken,
     });
 
     const response: IrregularityReportCreateResponse = { ok: true, report };

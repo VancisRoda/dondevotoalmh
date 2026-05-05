@@ -56,9 +56,7 @@ export async function ensureDatabaseSchema(): Promise<void> {
     await sql`
       CREATE TABLE IF NOT EXISTS irregularity_reports (
         id BIGSERIAL PRIMARY KEY,
-        public_code TEXT,
         message TEXT NOT NULL,
-        submission_token TEXT,
         dni TEXT,
         full_name TEXT,
         email TEXT,
@@ -68,16 +66,6 @@ export async function ensureDatabaseSchema(): Promise<void> {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
-    `;
-
-    await sql`
-      ALTER TABLE irregularity_reports
-      ADD COLUMN IF NOT EXISTS public_code TEXT
-    `;
-
-    await sql`
-      ALTER TABLE irregularity_reports
-      ADD COLUMN IF NOT EXISTS submission_token TEXT
     `;
 
     await sql`
@@ -182,18 +170,6 @@ export async function ensureDatabaseSchema(): Promise<void> {
     await sql`
       CREATE INDEX IF NOT EXISTS irregularity_reports_created_at_idx
       ON irregularity_reports (created_at DESC)
-    `;
-
-    await sql`
-      CREATE UNIQUE INDEX IF NOT EXISTS irregularity_reports_public_code_idx
-      ON irregularity_reports (public_code)
-      WHERE public_code IS NOT NULL
-    `;
-
-    await sql`
-      CREATE UNIQUE INDEX IF NOT EXISTS irregularity_reports_submission_token_idx
-      ON irregularity_reports (submission_token)
-      WHERE submission_token IS NOT NULL
     `;
 
     await sql`
