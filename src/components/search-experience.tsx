@@ -27,9 +27,11 @@ function normalizeDniInput(rawDni: string): string {
 
 function VoteCard({
   title,
+  mesa,
   orden,
 }: {
   title: string;
+  mesa: string;
   orden: string;
 }) {
   return (
@@ -37,9 +39,15 @@ function VoteCard({
       <header className={styles.voteCardHeader}>
         <h4>{title}</h4>
       </header>
-      <div className={styles.singleMetric}>
-        <span className={styles.metricLabel}>Número de orden</span>
-        <strong className={styles.metricValue}>{orden}</strong>
+      <div className={styles.voteCardMetrics}>
+        <div className={styles.singleMetric}>
+          <span className={styles.metricLabel}>Mesa</span>
+          <strong className={styles.metricValue}>{mesa}</strong>
+        </div>
+        <div className={styles.singleMetric}>
+          <span className={styles.metricLabel}>Número de orden</span>
+          <strong className={styles.metricValue}>{orden}</strong>
+        </div>
       </div>
     </article>
   );
@@ -154,10 +162,18 @@ export function SearchExperience() {
 
             <div className={styles.voteGrid}>
               {result.centro ? (
-                <VoteCard orden={result.centro.orden} title="Centro de Estudiantes" />
+                <VoteCard
+                  mesa={result.centro.mesa}
+                  orden={result.centro.orden}
+                  title="Centro de Estudiantes"
+                />
               ) : null}
               {result.consejo ? (
-                <VoteCard orden={result.consejo.orden} title="Consejo Directivo" />
+                <VoteCard
+                  mesa={result.consejo.mesa}
+                  orden={result.consejo.orden}
+                  title="Consejo Directivo"
+                />
               ) : null}
             </div>
 

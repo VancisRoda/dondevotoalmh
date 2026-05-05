@@ -6,6 +6,7 @@ import type { LookupResponse } from "@/lib/types";
 function drawOrderBlock(
   pdf: jsPDF,
   title: string,
+  mesa: string,
   orden: string,
   startY: number,
 ): number {
@@ -16,7 +17,7 @@ function drawOrderBlock(
   pdf.setFontSize(13);
   pdf.text(title, 22, startY + 8);
 
-  const detailLines = [`Número de orden: ${orden}`];
+  const detailLines = [`Mesa: ${mesa}`, `Número de orden: ${orden}`];
 
   let currentY = startY + 20;
   pdf.setFont("helvetica", "normal");
@@ -108,11 +109,23 @@ export function downloadLookupPdf(result: LookupResponse): void {
 
   currentY += 42;
   if (result.centro) {
-    currentY = drawOrderBlock(pdf, "Centro de Estudiantes", result.centro.orden, currentY);
+    currentY = drawOrderBlock(
+      pdf,
+      "Centro de Estudiantes",
+      result.centro.mesa,
+      result.centro.orden,
+      currentY,
+    );
   }
 
   if (result.consejo) {
-    currentY = drawOrderBlock(pdf, "Consejo Directivo", result.consejo.orden, currentY);
+    currentY = drawOrderBlock(
+      pdf,
+      "Consejo Directivo",
+      result.consejo.mesa,
+      result.consejo.orden,
+      currentY,
+    );
   }
 
   pdf.setDrawColor(0, 136, 8);
