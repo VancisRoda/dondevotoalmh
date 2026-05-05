@@ -14,10 +14,10 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import re
 import sys
 import unicodedata
-from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -233,35 +233,51 @@ def parse_source_txt(raw_text: str) -> list[SourceRecord]:
 
     return records
 
-
-def load_mesa_template(template_path: Path) -> list[tuple[str, int]]:
-    with template_path.open("r", encoding="utf-8-sig", newline="") as handle:
-        rows = list(csv.DictReader(handle))
-
-    counter = Counter(row["mesa de votación"].strip() for row in rows if row.get("mesa de votación"))
-    mesas = sorted(counter.items(), key=lambda item: int(item[0]))
-    if not mesas:
-        raise ValueError(f"No se pudieron leer mesas desde {template_path}")
-    return mesas
+def get_apellido_initial(name: str) -> str | None:
+    normalized = normalize_for_compare(name)
+    for char in normalized:
+        if "A" <= char <= "Z":
+            return char
+    return None
 
 
-def build_mesa_values(total_rows: int, mesa_blocks: list[tuple[str, int]]) -> list[str]:
-    template_total = sum(count for _, count in mesa_blocks)
-    mesas: list[str] = []
-    for mesa, count in mesa_blocks:
-        remaining = total_rows - len(mesas)
-        if remaining <= 0:
+def assign_mesa_from_rules(
+    records: list[SourceRecord],
+    rules_path: Path,
+) -> list[str]:
+    rules = json.loads(rules_path.read_text(encoding="utf-8-sig"))
+    mesa_values: list[str] = []
+
+    for record in records:
+        initial = get_apellido_initial(record.name)
+        mesa: str | None = None
+
+        for rule in rules:
+            year_start = int(rule["yearStart"])
+            year_end = int(rule["yearEnd"])
+            if record.year < year_start or record.year > year_end:
+                continue
+
+            letter_start = rule.get("letterStart")
+            letter_end = rule.get("letterEnd")
+            if letter_start and letter_end:
+                if initial is None:
+                    continue
+                if not (letter_start <= initial <= letter_end):
+                    continue
+
+            mesa = str(rule["mesa"])
             break
-        mesas.extend([mesa] * min(count, remaining))
 
-    if len(mesas) < total_rows:
-        last_mesa = mesa_blocks[-1][0]
-        mesas.extend([last_mesa] * (total_rows - len(mesas)))
+        if mesa is None:
+            raise ValueError(
+                "No se pudo asignar mesa para "
+                f"{record.source_order} | {record.name} | {record.year}"
+            )
 
-    if len(mesas) != total_rows:
-        raise ValueError("No se pudieron asignar mesas para todos los registros")
+        mesa_values.append(mesa)
 
-    return mesas
+    return mesa_values
 
 
 def default_output_path(input_path: Path) -> Path:
@@ -290,7 +306,7 @@ def write_csv(
         for index, record in enumerate(records, start=1):
             writer.writerow(
                 [
-                    index,
+                    record.source_order,
                     record.year,
                     clean_spaces(record.name),
                     normalize_dni_value(record.dni)[0],
@@ -314,10 +330,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="CSV de salida. Si no se indica, se genera junto al TXT.",
     )
     parser.add_argument(
-        "--mesa-template",
+        "--mesa-rules",
         type=Path,
-        default=repo_root / "data" / "Padron_centro_final.csv",
-        help="CSV usado como plantilla para repartir mesas",
+        default=repo_root / "data" / "mesa_distribucion_centro.json",
+        help="JSON con las reglas oficiales para asignar mesas",
     )
     parser.add_argument(
         "--no-mesa",
@@ -358,21 +374,11 @@ def main() -> int:
 
     records = normalized_records
 
-    records.sort(
-        key=lambda record: (
-            record.year,
-            normalize_for_compare(record.name),
-            record.dni,
-            record.source_order,
-        )
-    )
+    records.sort(key=lambda record: record.source_order)
 
     mesa_values: list[str] | None = None
     if not args.no_mesa:
-        mesa_values = build_mesa_values(
-            total_rows=len(records),
-            mesa_blocks=load_mesa_template(args.mesa_template.resolve()),
-        )
+        mesa_values = assign_mesa_from_rules(records, args.mesa_rules.resolve())
 
     write_csv(output_path, records, mesa_values)
 
@@ -380,7 +386,7 @@ def main() -> int:
     if mesa_values is None:
         print("Mesas: no asignadas")
     else:
-        print(f"Mesas: asignadas usando {args.mesa_template}")
+        print(f"Mesas: asignadas usando reglas de {args.mesa_rules}")
     if warnings:
         print(f"Avisos de normalizacion DNI: {len(warnings)}")
     print(f"Salida: {output_path}")
