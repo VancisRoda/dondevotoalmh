@@ -89,10 +89,12 @@ export function downloadLookupPdf(result: LookupResponse): void {
   const displayYear = result.centro?.anioIngreso ?? result.consejo?.anioIngreso ?? "";
   const displayMesa = result.centro?.mesa ?? result.consejo?.mesa ?? "";
   const centroDistribution = getCentroDistributionForLookup(result);
-  const mesaLocationLine = centroDistribution
-    ? `Mesa ${displayMesa}, ${centroDistribution.rule.location}`
-    : `Mesa ${displayMesa}`;
-  const mesaLocationLines = pdf.splitTextToSize(mesaLocationLine, 166);
+  const mesaLocationLines = centroDistribution
+    ? [
+        `Mesa ${displayMesa}, ${centroDistribution.rule.location.split(", ")[0]}`,
+        centroDistribution.rule.location.split(", ").slice(1).join(", "),
+      ].filter(Boolean)
+    : [`Mesa ${displayMesa}`];
 
   let currentY = 68 + introLines.length * 6 + 8;
   const summaryHeight = 16 + mesaLocationLines.length * 7 + 8;
