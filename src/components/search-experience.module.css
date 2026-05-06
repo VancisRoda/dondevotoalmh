@@ -216,11 +216,13 @@
 }
 
 .votePlace {
+  max-width: 24ch;
   color: var(--text-primary);
   font-family: var(--font-oswald), sans-serif;
   font-size: clamp(1.2rem, 2.8vw, 1.8rem);
   font-weight: 700;
-  line-height: 0.96;
+  line-height: 1.02;
+  overflow-wrap: anywhere;
   text-transform: uppercase;
 }
 

@@ -95,17 +95,17 @@ export function downloadLookupPdf(result: LookupResponse): void {
   const mesaLocationLines = pdf.splitTextToSize(mesaLocationLine, 166);
 
   let currentY = 68 + introLines.length * 6 + 8;
-  const summaryHeight = 24 + mesaLocationLines.length * 6;
+  const summaryHeight = 16 + mesaLocationLines.length * 7 + 8;
 
   pdf.setFillColor(245, 247, 242);
   pdf.roundedRect(16, currentY, 178, summaryHeight, 4, 4, "F");
   pdf.setTextColor(18, 61, 18);
   pdf.setFont("helvetica", "bold");
   pdf.setFontSize(14);
-  pdf.text(mesaLocationLines, 22, currentY + 9);
+  pdf.text(mesaLocationLines, 22, currentY + 10);
   pdf.setFont("helvetica", "normal");
   pdf.setFontSize(11);
-  const detailsStartY = currentY + 9 + mesaLocationLines.length * 6 + 3;
+  const detailsStartY = currentY + 10 + mesaLocationLines.length * 7 + 2;
   pdf.text(`Apellido y nombre: ${displayName}`, 22, detailsStartY);
   pdf.text(`Año de ingreso: ${displayYear}`, 22, detailsStartY + 7);
 
