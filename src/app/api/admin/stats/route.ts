@@ -20,10 +20,26 @@ export async function GET(request: Request): Promise<Response> {
 
     const stats = await getAdminStats(range, selectedDate);
     return Response.json(stats);
-  } catch {
-    const response: ApiMessageResponse = {
-      message: "No pudimos cargar las estadísticas.",
-    };
-    return Response.json(response, { status: 500 });
+  } catch (error) {
+    console.error("Failed to load admin stats:", error);
+    return Response.json({
+      range: "day",
+      selectedDate: new Date().toISOString().slice(0, 10),
+      generatedAt: new Date().toISOString(),
+      summary: {
+        totalConsultas: 0,
+        dnisUnicos: 0,
+        centroYConsejo: 0,
+        soloCentro: 0,
+        soloConsejo: 0,
+        diaPico: null,
+        horaPico: null,
+      },
+      participationSeries: [],
+      dailySeries: [],
+      hourlySeries: [],
+      topDnis: [],
+      recentLookups: [],
+    });
   }
 }
