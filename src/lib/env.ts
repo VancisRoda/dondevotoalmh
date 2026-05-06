@@ -14,7 +14,13 @@ export function getRequiredEnv(name: string): string {
 }
 
 export function getDatabaseUrl(): string | null {
-  return process.env.DATABASE_URL ?? process.env.POSTGRES_URL ?? null;
+  return (
+    process.env.DATABASE_URL ??
+    process.env.POSTGRES_URL ??
+    process.env.POSTGRES_PRISMA_URL ??
+    process.env.POSTGRES_URL_NON_POOLING ??
+    null
+  );
 }
 
 export function isDatabaseConfigured(): boolean {

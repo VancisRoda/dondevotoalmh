@@ -5,6 +5,8 @@ import type {
   IrregularityReportCreatePayload,
 } from "@/lib/types";
 
+export const runtime = "nodejs";
+
 export async function POST(request: Request): Promise<Response> {
   try {
     const payload = (await request.json()) as IrregularityReportCreatePayload;

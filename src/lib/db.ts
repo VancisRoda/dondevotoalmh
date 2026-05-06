@@ -4,6 +4,31 @@ import { getDatabaseUrl } from "@/lib/env";
 
 let cachedSql: ReturnType<typeof neon> | null = null;
 let schemaReadyPromise: Promise<void> | null = null;
+const MAX_DATABASE_ATTEMPTS = 2;
+
+function resetDatabaseState() {
+  cachedSql = null;
+  schemaReadyPromise = null;
+}
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return String(error);
+}
+
+function isRetryableDatabaseError(error: unknown): boolean {
+  const message = getErrorMessage(error);
+  return /fetch failed|Error connecting to database|ECONNRESET|ETIMEDOUT|ENOTFOUND|socket hang up/i.test(
+    message,
+  );
+}
+
+async function delay(ms: number) {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function getSql() {
   if (cachedSql) {
@@ -15,7 +40,11 @@ function getSql() {
     throw new Error("Database is not configured.");
   }
 
-  cachedSql = neon(databaseUrl);
+  cachedSql = neon(databaseUrl, {
+    fetchOptions: {
+      cache: "no-store",
+    },
+  });
   return cachedSql;
 }
 
@@ -178,12 +207,38 @@ export async function ensureDatabaseSchema(): Promise<void> {
     `;
   })();
 
-  return schemaReadyPromise;
+  try {
+    await schemaReadyPromise;
+  } catch (error) {
+    resetDatabaseState();
+    throw error;
+  }
 }
 
 export async function withDatabase<T>(
   work: (sql: ReturnType<typeof neon>) => Promise<T>,
 ): Promise<T> {
-  await ensureDatabaseSchema();
-  return work(getSql());
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= MAX_DATABASE_ATTEMPTS; attempt += 1) {
+    try {
+      await ensureDatabaseSchema();
+      return await work(getSql());
+    } catch (error) {
+      lastError = error;
+
+      if (!isRetryableDatabaseError(error) || attempt === MAX_DATABASE_ATTEMPTS) {
+        throw error;
+      }
+
+      console.error(
+        `Retrying database request after connection failure (attempt ${attempt}/${MAX_DATABASE_ATTEMPTS})`,
+        error,
+      );
+      resetDatabaseState();
+      await delay(150 * attempt);
+    }
+  }
+
+  throw lastError;
 }
