@@ -135,7 +135,7 @@
   {
     "mesa": "18",
     "description": "Ingreso 2025, de la letra A a la E",
-    "location": "AULA NORTE",
+    "location": "AULA NORTE, A LA IZQUIERDA SI ESTÁS MIRANDO DE FRENTE EL AULA CENTRAL",
     "yearStart": 2025,
     "yearEnd": 2025,
     "letterStart": "A",
@@ -144,7 +144,7 @@
   {
     "mesa": "19",
     "description": "Ingreso 2025, de la letra F a la M",
-    "location": "AULA SUR",
+    "location": "AULA SUR, A LA DERECHA SI ESTÁS MIRANDO DE FRENTE EL AULA CENTRAL",
     "yearStart": 2025,
     "yearEnd": 2025,
     "letterStart": "F",
